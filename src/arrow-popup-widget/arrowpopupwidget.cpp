@@ -130,11 +130,11 @@ void ArrowPopupWidget::balloon(const QPoint& pos, int msecs, bool showArrow)
     QRect scr = screen->geometry();
     QSize sh = sizeHint();
     const int border = 1;
-    const int arrowHeight = 8, arrowOver = 18, arrowWidth = 16, borderRadius = 0;
+    const int arrowHeight = 8, arrowOffset = 18, arrowWidth = 16, borderRadius = 0;
 
     // Determine arrow position
     bool arrowAtTop = (pos.y() + sh.height() + arrowHeight < scr.height());
-    bool arrowAtLeft = (pos.x() + sh.width() - arrowOver < scr.width());
+    bool arrowAtLeft = (pos.x() + sh.width() - arrowOffset < scr.width());
 
     // Resize content margin
     setContentsMargins(
@@ -164,18 +164,18 @@ void ArrowPopupWidget::balloon(const QPoint& pos, int msecs, bool showArrow)
     path.moveTo(marginLeft + borderRadius, marginTop);
     if (arrowAtTop && arrowAtLeft) {
         if (showArrow) {
-            path.lineTo(marginLeft + arrowOver, marginTop);
-            path.lineTo(marginLeft + arrowOver + arrowWidth/2, marginTop - arrowHeight);
-            path.lineTo(marginLeft + arrowOver + arrowWidth, marginTop);
+            path.lineTo(marginLeft + arrowOffset, marginTop);
+            path.lineTo(marginLeft + arrowOffset + arrowWidth/2, marginTop - arrowHeight);
+            path.lineTo(marginLeft + arrowOffset + arrowWidth, marginTop);
         }
-        move(qMax(pos.x() - arrowOver, scr.left() + 2), pos.y());
+        move(qMax(pos.x() - arrowOffset, scr.left() + 2), pos.y());
     } else if (arrowAtTop && !arrowAtLeft) {
         if (showArrow) {
-            path.lineTo(marginRight - arrowOver - arrowWidth, marginTop);
-            path.lineTo(marginRight - arrowOver - arrowWidth/2, marginTop - arrowHeight);
-            path.lineTo(marginRight - arrowOver, marginTop);
+            path.lineTo(marginRight - arrowOffset - arrowWidth, marginTop);
+            path.lineTo(marginRight - arrowOffset - arrowWidth/2, marginTop - arrowHeight);
+            path.lineTo(marginRight - arrowOffset, marginTop);
         }
-        move(qMin(pos.x() - sh.width() + arrowOver, scr.right() - sh.width() - 2), pos.y());
+        move(qMin(pos.x() - sh.width() + arrowOffset, scr.right() - sh.width() - 2), pos.y());
     }
     path.lineTo(marginRight - borderRadius, marginTop);
     path.arcTo(QRect(marginRight - borderRadius*2, marginTop, borderRadius*2, borderRadius*2), 90, -90);
@@ -183,19 +183,19 @@ void ArrowPopupWidget::balloon(const QPoint& pos, int msecs, bool showArrow)
     path.arcTo(QRect(marginRight - borderRadius*2, marginBottom - borderRadius*2, borderRadius*2, borderRadius*2), 0, -90);
     if (!arrowAtTop && !arrowAtLeft) {
         if (showArrow) {
-            path.lineTo(marginRight - arrowOver, marginBottom);
-            path.lineTo(marginRight - arrowOver - arrowWidth/2, marginBottom + arrowHeight);
-            path.lineTo(marginRight - arrowOver - arrowWidth, marginBottom);
+            path.lineTo(marginRight - arrowOffset, marginBottom);
+            path.lineTo(marginRight - arrowOffset - arrowWidth/2, marginBottom + arrowHeight);
+            path.lineTo(marginRight - arrowOffset - arrowWidth, marginBottom);
         }
-        move(qMin(pos.x() - sh.width() + arrowOver, scr.right() - sh.width() - 2),
+        move(qMin(pos.x() - sh.width() + arrowOffset, scr.right() - sh.width() - 2),
              pos.y() - sh.height());
     } else if (!arrowAtTop && arrowAtLeft) {
         if (showArrow) {
-            path.lineTo(arrowOver + arrowWidth, marginBottom);
-            path.lineTo(arrowOver + arrowWidth/2, marginBottom + arrowHeight);
-            path.lineTo(arrowOver, marginBottom);
+            path.lineTo(arrowOffset + arrowWidth, marginBottom);
+            path.lineTo(arrowOffset + arrowWidth/2, marginBottom + arrowHeight);
+            path.lineTo(arrowOffset, marginBottom);
         }
-        move(qMax(pos.x() - arrowOver, scr.x() + 2), pos.y() - sh.height());
+        move(qMax(pos.x() - arrowOffset, scr.x() + 2), pos.y() - sh.height());
     }
     path.lineTo(marginLeft + borderRadius, marginBottom);
     path.arcTo(QRect(marginLeft, marginBottom - borderRadius*2, borderRadius*2, borderRadius*2), -90, -90);
