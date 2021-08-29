@@ -130,67 +130,77 @@ void ArrowPopupWidget::balloon(const QPoint& pos, int msecs, bool showArrow)
     QRect scr = screen->geometry();
     QSize sh = sizeHint();
     const int border = 1;
-    const int ah = 18, ao = 18, aw = 18, rc = 7;
-    bool arrowAtTop = (pos.y() + sh.height() + ah < scr.height());
-    bool arrowAtLeft = (pos.x() + sh.width() - ao < scr.width());
-    setContentsMargins(border + 3,  border + (arrowAtTop ? ah : 0) + 2, border + 3, border + (arrowAtTop ? 0 : ah) + 2);
+    const int arrowHeight = 8, arrowOver = 18, arrowWidth = 16, borderRadius = 0;
+
+    // Determine arrow position
+    bool arrowAtTop = (pos.y() + sh.height() + arrowHeight < scr.height());
+    bool arrowAtLeft = (pos.x() + sh.width() - arrowOver < scr.width());
+
+    // Resize content margin
+    setContentsMargins(
+        border + 3,
+        border + (arrowAtTop ? arrowHeight : 0) + 2,
+        border + 3,
+        border + (arrowAtTop ? 0 : arrowHeight) + 2);
     updateGeometry();
     sh  = sizeHint();
 
-    int ml, mr, mt, mb;
+    // Determine position of widget rect
+    int marginLeft, marginRight, marginTop, marginBottom;
     QSize sz = sizeHint();
     if (!arrowAtTop) {
-        ml = mt = 0;
-        mr = sz.width() - 1;
-        mb = sz.height() - ah - 1;
+        marginLeft = marginTop = 0;
+        marginRight = sz.width() - 1;
+        marginBottom = sz.height() - arrowHeight - 1;
     } else {
-        ml = 0;
-        mt = ah;
-        mr = sz.width() - 1;
-        mb = sz.height() - 1;
+        marginLeft = 0;
+        marginTop = arrowHeight;
+        marginRight = sz.width() - 1;
+        marginBottom = sz.height() - 1;
     }
 
+    // Draw border of whole widget including arrow
     QPainterPath path;
-    path.moveTo(ml + rc, mt);
+    path.moveTo(marginLeft + borderRadius, marginTop);
     if (arrowAtTop && arrowAtLeft) {
         if (showArrow) {
-            path.lineTo(ml + ao, mt);
-            path.lineTo(ml + ao, mt - ah);
-            path.lineTo(ml + ao + aw, mt);
+            path.lineTo(marginLeft + arrowOver, marginTop);
+            path.lineTo(marginLeft + arrowOver + arrowWidth/2, marginTop - arrowHeight);
+            path.lineTo(marginLeft + arrowOver + arrowWidth, marginTop);
         }
-        move(qMax(pos.x() - ao, scr.left() + 2), pos.y());
+        move(qMax(pos.x() - arrowOver, scr.left() + 2), pos.y());
     } else if (arrowAtTop && !arrowAtLeft) {
         if (showArrow) {
-            path.lineTo(mr - ao - aw, mt);
-            path.lineTo(mr - ao, mt - ah);
-            path.lineTo(mr - ao, mt);
+            path.lineTo(marginRight - arrowOver - arrowWidth, marginTop);
+            path.lineTo(marginRight - arrowOver - arrowWidth/2, marginTop - arrowHeight);
+            path.lineTo(marginRight - arrowOver, marginTop);
         }
-        move(qMin(pos.x() - sh.width() + ao, scr.right() - sh.width() - 2), pos.y());
+        move(qMin(pos.x() - sh.width() + arrowOver, scr.right() - sh.width() - 2), pos.y());
     }
-    path.lineTo(mr - rc, mt);
-    path.arcTo(QRect(mr - rc*2, mt, rc*2, rc*2), 90, -90);
-    path.lineTo(mr, mb - rc);
-    path.arcTo(QRect(mr - rc*2, mb - rc*2, rc*2, rc*2), 0, -90);
+    path.lineTo(marginRight - borderRadius, marginTop);
+    path.arcTo(QRect(marginRight - borderRadius*2, marginTop, borderRadius*2, borderRadius*2), 90, -90);
+    path.lineTo(marginRight, marginBottom - borderRadius);
+    path.arcTo(QRect(marginRight - borderRadius*2, marginBottom - borderRadius*2, borderRadius*2, borderRadius*2), 0, -90);
     if (!arrowAtTop && !arrowAtLeft) {
         if (showArrow) {
-            path.lineTo(mr - ao, mb);
-            path.lineTo(mr - ao, mb + ah);
-            path.lineTo(mr - ao - aw, mb);
+            path.lineTo(marginRight - arrowOver, marginBottom);
+            path.lineTo(marginRight - arrowOver - arrowWidth/2, marginBottom + arrowHeight);
+            path.lineTo(marginRight - arrowOver - arrowWidth, marginBottom);
         }
-        move(qMin(pos.x() - sh.width() + ao, scr.right() - sh.width() - 2),
+        move(qMin(pos.x() - sh.width() + arrowOver, scr.right() - sh.width() - 2),
              pos.y() - sh.height());
     } else if (!arrowAtTop && arrowAtLeft) {
         if (showArrow) {
-            path.lineTo(ao + aw, mb);
-            path.lineTo(ao, mb + ah);
-            path.lineTo(ao, mb);
+            path.lineTo(arrowOver + arrowWidth, marginBottom);
+            path.lineTo(arrowOver + arrowWidth/2, marginBottom + arrowHeight);
+            path.lineTo(arrowOver, marginBottom);
         }
-        move(qMax(pos.x() - ao, scr.x() + 2), pos.y() - sh.height());
+        move(qMax(pos.x() - arrowOver, scr.x() + 2), pos.y() - sh.height());
     }
-    path.lineTo(ml + rc, mb);
-    path.arcTo(QRect(ml, mb - rc*2, rc*2, rc*2), -90, -90);
-    path.lineTo(ml, mt + rc);
-    path.arcTo(QRect(ml, mt, rc*2, rc*2), 180, -90);
+    path.lineTo(marginLeft + borderRadius, marginBottom);
+    path.arcTo(QRect(marginLeft, marginBottom - borderRadius*2, borderRadius*2, borderRadius*2), -90, -90);
+    path.lineTo(marginLeft, marginTop + borderRadius);
+    path.arcTo(QRect(marginLeft, marginTop, borderRadius*2, borderRadius*2), 180, -90);
 
     // Set the mask
     QBitmap bitmap = QBitmap(sizeHint());
