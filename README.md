@@ -1,0 +1,1 @@
+Some of codes are extract from Qt or Qt Creator sources.
