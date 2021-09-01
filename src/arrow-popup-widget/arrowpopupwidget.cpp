@@ -56,6 +56,7 @@ ArrowPopupWidget::ArrowPopupWidget(const QIcon &icon, const QString &title, cons
       showArrow(true)
 {
     setAttribute(Qt::WA_DeleteOnClose);
+    setAttribute(Qt::WA_TranslucentBackground);
 
     QLabel *titleLabel = new QLabel;
     titleLabel->installEventFilter(this);
@@ -102,6 +103,7 @@ ArrowPopupWidget::ArrowPopupWidget(const QIcon &icon, const QString &title, cons
 
     QPalette pal = palette();
     pal.setColor(QPalette::Window, QColor(0xff, 0xff, 0xe1));
+    //pal.setColor(QPalette::Window, QColor("black"));
     pal.setColor(QPalette::WindowText, Qt::black);
     setPalette(pal);
 }
@@ -114,7 +116,12 @@ ArrowPopupWidget::~ArrowPopupWidget()
 void ArrowPopupWidget::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
-    painter.drawPixmap(rect(), pixmap);
+    //painter.drawPixmap(rect(), pixmap);
+    painter.setPen(QPen(palette().color(QPalette::Window).darker(160), 0.5));
+    painter.setBrush(QBrush(QColor(0, 0, 0, 0)));
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setBrush(palette().color(QPalette::Window));
+    painter.drawPath(m_path);
 }
 
 void ArrowPopupWidget::resizeEvent(QResizeEvent *ev)
@@ -130,7 +137,7 @@ void ArrowPopupWidget::balloon(const QPoint& pos, int msecs, bool showArrow)
     QRect scr = screen->geometry();
     QSize sh = sizeHint();
     const int border = 1;
-    const int arrowHeight = 8, arrowOffset = 18, arrowWidth = 16, borderRadius = 0;
+    const int arrowHeight = 8, arrowOffset = 18, arrowWidth = 16, borderRadius = 8;
 
     // Determine arrow position
     bool arrowAtTop = (pos.y() + sh.height() + arrowHeight < scr.height());
@@ -202,6 +209,8 @@ void ArrowPopupWidget::balloon(const QPoint& pos, int msecs, bool showArrow)
     path.lineTo(marginLeft, marginTop + borderRadius);
     path.arcTo(QRect(marginLeft, marginTop, borderRadius*2, borderRadius*2), 180, -90);
 
+    m_path = path;
+
     // Set the mask
     QBitmap bitmap = QBitmap(sizeHint());
     bitmap.fill(Qt::color0);
@@ -209,7 +218,7 @@ void ArrowPopupWidget::balloon(const QPoint& pos, int msecs, bool showArrow)
     painter1.setPen(QPen(Qt::color1, border));
     painter1.setBrush(QBrush(Qt::color1));
     painter1.drawPath(path);
-    setMask(bitmap);
+    //setMask(bitmap);
 
     // Draw the border
     pixmap = QPixmap(sz);

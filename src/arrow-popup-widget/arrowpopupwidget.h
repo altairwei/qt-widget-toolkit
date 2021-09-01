@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QWidget>
+#include <QPainterPath>
 
 class ArrowPopupWidget : public QWidget
 {
@@ -27,6 +28,7 @@ protected:
 
 private:
     QPixmap pixmap;
+    QPainterPath m_path;
     int timerId;
     bool showArrow;
 };

@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     });
 
     wgt.setWindowTitle("Arrow Popup Widget Example");
-    wgt.setFixedSize(QSize(150, 50));
+    wgt.setFixedSize(QSize(250, 50));
     wgt.show();
 
     return app.exec();
