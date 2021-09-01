@@ -14,21 +14,21 @@
 
 static ArrowPopupWidget *theSolitaryBalloonTip = nullptr;
 
-void ArrowPopupWidget::showBalloon(const QIcon &icon, const QString &title,
+void ArrowPopupWidget::showPopup(const QIcon &icon, const QString &title,
                               const QString &message, const QPoint &pos,
                               int timeout, bool showArrow)
 {
-    hideBalloon();
+    hidePopup();
     if (message.isEmpty() && title.isEmpty())
         return;
 
     theSolitaryBalloonTip = new ArrowPopupWidget(icon, title, message);
     if (timeout < 0)
         timeout = 10000; //10 s default
-    theSolitaryBalloonTip->balloon(pos, timeout, showArrow);
+    theSolitaryBalloonTip->showAtPos(pos, timeout, showArrow);
 }
 
-void ArrowPopupWidget::hideBalloon()
+void ArrowPopupWidget::hidePopup()
 {
     if (!theSolitaryBalloonTip)
         return;
@@ -37,24 +37,25 @@ void ArrowPopupWidget::hideBalloon()
     theSolitaryBalloonTip = nullptr;
 }
 
-void ArrowPopupWidget::updateBalloonPosition(const QPoint& pos)
+void ArrowPopupWidget::updatePopupPosition(const QPoint& pos)
 {
     if (!theSolitaryBalloonTip)
         return;
     theSolitaryBalloonTip->hide();
-    theSolitaryBalloonTip->balloon(pos, 0, theSolitaryBalloonTip->showArrow);
+    theSolitaryBalloonTip->showAtPos(pos, 0, theSolitaryBalloonTip->showArrow);
 }
 
-bool ArrowPopupWidget::isBalloonVisible()
+bool ArrowPopupWidget::isPopupVisible()
 {
     return theSolitaryBalloonTip;
 }
 
 ArrowPopupWidget::ArrowPopupWidget(const QIcon &icon, const QString &title, const QString &message)
-    : QWidget(nullptr, Qt::ToolTip),
+    : QWidget(nullptr),
       timerId(-1),
       showArrow(true)
 {
+    setWindowFlag(Qt::FramelessWindowHint);
     setAttribute(Qt::WA_DeleteOnClose);
     setAttribute(Qt::WA_TranslucentBackground);
 
@@ -103,7 +104,6 @@ ArrowPopupWidget::ArrowPopupWidget(const QIcon &icon, const QString &title, cons
 
     QPalette pal = palette();
     pal.setColor(QPalette::Window, QColor(0xff, 0xff, 0xe1));
-    //pal.setColor(QPalette::Window, QColor("black"));
     pal.setColor(QPalette::WindowText, Qt::black);
     setPalette(pal);
 }
@@ -117,9 +117,8 @@ void ArrowPopupWidget::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
     //painter.drawPixmap(rect(), pixmap);
-    painter.setPen(QPen(palette().color(QPalette::Window).darker(160), 0.5));
-    painter.setBrush(QBrush(QColor(0, 0, 0, 0)));
     painter.setRenderHint(QPainter::Antialiasing);
+    painter.setPen(QPen(palette().color(QPalette::Window).darker(160), 1, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
     painter.setBrush(palette().color(QPalette::Window));
     painter.drawPath(m_path);
 }
@@ -129,7 +128,7 @@ void ArrowPopupWidget::resizeEvent(QResizeEvent *ev)
     QWidget::resizeEvent(ev);
 }
 
-void ArrowPopupWidget::balloon(const QPoint& pos, int msecs, bool showArrow)
+void ArrowPopupWidget::showAtPos(const QPoint& pos, int msecs, bool showArrow)
 {
     this->showArrow = showArrow;
     QScreen *screen = QGuiApplication::screenAt(pos);

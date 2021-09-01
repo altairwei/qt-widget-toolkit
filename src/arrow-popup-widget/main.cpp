@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     QObject::connect(btn, &QPushButton::clicked, [btn] {
         QRect rc = btn->rect();
         QPoint pt = btn->mapToGlobal(QPoint(rc.width()/2, rc.height()));
-         ArrowPopupWidget::showBalloon(QIcon(),
+         ArrowPopupWidget::showPopup(QIcon(),
             "Gretting", "Hello World. What's your name?", pt, 10000, true);
     });
 

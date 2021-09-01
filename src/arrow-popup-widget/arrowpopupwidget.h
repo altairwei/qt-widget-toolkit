@@ -7,18 +7,18 @@ class ArrowPopupWidget : public QWidget
 {
     Q_OBJECT
 public:
-    static void showBalloon(const QIcon &icon, const QString &title,
+    static void showPopup(const QIcon &icon, const QString &title,
                             const QString &msg, const QPoint &pos,
                             int timeout, bool showArrow = true);
-    static void hideBalloon();
-    static bool isBalloonVisible();
-    static void updateBalloonPosition(const QPoint& pos);
+    static void hidePopup();
+    static bool isPopupVisible();
+    static void updatePopupPosition(const QPoint& pos);
 
 private:
     ArrowPopupWidget(const QIcon &icon, const QString &title,
                 const QString &msg);
     ~ArrowPopupWidget();
-    void balloon(const QPoint&, int, bool);
+    void showAtPos(const QPoint&, int, bool);
 
 protected:
     void paintEvent(QPaintEvent *) override;
