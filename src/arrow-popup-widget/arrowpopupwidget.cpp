@@ -155,13 +155,14 @@ void ArrowPopupWidget::showAtPos(const QPoint& pos, int msecs, bool showArrow)
     int marginLeft, marginRight, marginTop, marginBottom;
     QSize sz = sizeHint();
     if (!arrowAtTop) {
-        marginLeft = marginTop = 0;
+        marginLeft = 1;
         marginRight = sz.width() - 1;
+        marginTop = 1;
         marginBottom = sz.height() - arrowHeight - 1;
     } else {
-        marginLeft = 0;
-        marginTop = arrowHeight;
+        marginLeft = 1;
         marginRight = sz.width() - 1;
+        marginTop = arrowHeight + 1;
         marginBottom = sz.height() - 1;
     }
 
