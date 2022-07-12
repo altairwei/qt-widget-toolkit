@@ -6,6 +6,7 @@
 class ArrowPopupWidget : public QWidget
 {
     Q_OBJECT
+
 public:
     static void showPopup(const QIcon &icon, const QString &title,
                             const QString &msg, const QPoint &pos,
