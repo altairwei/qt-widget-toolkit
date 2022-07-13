@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
     QObject::connect(btn, &QPushButton::clicked, [&] {
         ShadowWidget *sh = new ShadowWidget(&wgt);
         sh->setTimeOut(4000);
+        sh->setMovable(true);
         auto layout = new QHBoxLayout;
         layout->addWidget(new QLabel("Gretting\nHello World. What's your name?"));
         sh->widget()->setLayout(layout);

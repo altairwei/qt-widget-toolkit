@@ -12,6 +12,7 @@ public:
 
     QWidget *widget() { return m_widget; }
     void setTimeOut(int timeout) { m_timeout = timeout; }
+    void setMovable(bool movable) { m_movable = movable; }
 
 protected:
     void showEvent(QShowEvent *event) override;
@@ -25,6 +26,7 @@ private:
     QWidget *m_widget;
     int m_timerId;
     int m_timeout;
+    bool m_movable;
     QPoint startPos;
 };
 

@@ -12,6 +12,7 @@ ShadowWidget::ShadowWidget(QWidget *parent)
     , m_widget(new QWidget)
     , m_timerId(-1)
     , m_timeout(2000)
+    , m_movable(false)
 {
     auto layout = new QVBoxLayout;
     layout->addWidget(m_widget);
@@ -78,14 +79,18 @@ void ShadowWidget::timerEvent(QTimerEvent *event)
 
 void ShadowWidget::mousePressEvent(QMouseEvent *event)
 {
-    startPos = event->globalPos();
+    if (m_movable)
+        startPos = event->globalPos();
     QWidget::mousePressEvent(event);
 }
 
 void ShadowWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    const QPoint delta = event->globalPos() - startPos;
-    move(x()+delta.x(), y()+delta.y());
-    startPos = event->globalPos();
+    if (m_movable) {
+        const QPoint delta = event->globalPos() - startPos;
+        move(x()+delta.x(), y()+delta.y());
+        startPos = event->globalPos();
+    }
+
     QWidget::mouseMoveEvent(event);
 }
