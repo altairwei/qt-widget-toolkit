@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
     wgt.setLayout(layout);
     QObject::connect(btn, &QPushButton::clicked, [&] {
         ShadowWidget *sh = new ShadowWidget(&wgt);
+        sh->setTimeOut(4000);
         auto layout = new QHBoxLayout;
         layout->addWidget(new QLabel("Gretting\nHello World. What's your name?"));
         sh->widget()->setLayout(layout);
@@ -23,7 +24,7 @@ int main(int argc, char *argv[])
     });
 
     wgt.setWindowTitle("Rounded Shadow Widget Example");
-    wgt.setFixedSize(QSize(450, 50));
+    wgt.setFixedSize(QSize(450, 150));
     wgt.show();
 
     return app.exec();
